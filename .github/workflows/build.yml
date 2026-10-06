@@ -1,0 +1,57 @@
+name: Build firmware
+
+on:
+  push:
+    paths-ignore: ["**.md", "docs/**"]
+  pull_request:
+    paths-ignore: ["**.md", "docs/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: pio run -e ${{ matrix.env }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # crowpanel = production firmware, crowpanel-dev = LT_DEV_MODE=1
+        env: [crowpanel, crowpanel-dev]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Cache PlatformIO platform, toolchain and libraries
+        uses: actions/cache@v6
+        with:
+          path: ~/.platformio
+          key: pio-${{ runner.os }}-${{ hashFiles('platformio.ini') }}
+
+      - name: Install PlatformIO Core
+        run: pip install "platformio==6.2.0"
+
+      # The real config.h is gitignored; CI compiles against the placeholders.
+      - name: Create config.h from the template
+        run: cp legacytape_arduino/config.example.h legacytape_arduino/config.h
+
+      - name: Build
+        run: pio run -e ${{ matrix.env }}
+
+      - name: Upload firmware images
+        uses: actions/upload-artifact@v7
+        with:
+          name: firmware-${{ matrix.env }}
+          path: |
+            .pio/build/${{ matrix.env }}/bootloader.bin
+            .pio/build/${{ matrix.env }}/partitions.bin
+            .pio/build/${{ matrix.env }}/firmware.bin
+          if-no-files-found: error

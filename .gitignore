@@ -1,0 +1,20 @@
+# Backend settings (copy legacytape_arduino/config.example.h to config.h)
+legacytape_arduino/config.h
+
+# PlatformIO
+.pio/
+
+# Arduino IDE / arduino-cli build artifacts
+build/
+*.elf
+*.bin
+*.map
+
+# macOS
+.DS_Store
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*~

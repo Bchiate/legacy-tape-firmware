@@ -1,0 +1,31 @@
+# Legacy Tape custom partition table — 5 MB APP, 10.9 MB SPIFFS, single boot slot.
+#
+# The Arduino ESP32 board package automatically uses this file when it lives
+# in the sketch folder, overriding whatever Tools -> Partition Scheme is set to.
+# PlatformIO picks it up through board_build.partitions in platformio.ini.
+#
+# Why custom: stock partitions cap APP at 3 MB. The production image is
+# ~4.55 MiB (91% of the 5 MiB slot). Breakdown from the linker map of the
+# Arduino-ESP32 3.0.7 build:
+#   - UI bitmaps (ui_img_*.c, uncompressed RGB565 + alpha): ~2.58 MiB
+#   - Bluetooth (Bluedroid host + controller):               ~0.55 MiB
+#   - WiFi + LWIP + coexistence:                             ~0.44 MiB
+#   - ESP-IDF + Arduino core, other:                         ~0.44 MiB
+#   - TLS + HTTP client (mbedTLS, HTTPClient):               ~0.19 MiB
+#   - LVGL, LovyanGFX, fonts, app code:                      ~0.34 MiB
+#
+# We give up dual-OTA (was 2x 3MB slots) for one larger 5MB slot. OTA updates
+# can be added later via signed payloads written to SPIFFS + bootloader swap.
+#
+# Layout (16 MB flash total):
+#   0x00000  - 0x09000   bootloader + partition table (36 KB)
+#   0x09000  - 0x0E000   nvs (20 KB) — pairing token + flag, WiFi creds, book/chapters, volume
+#   0x0E000  - 0x10000   otadata (8 KB)
+#   0x10000  - 0x510000  app0 (5 MB)
+#   0x510000 - 0x1000000 spiffs (~10.9 MB) — reserved; not mounted by the current firmware
+
+# Name,    Type, SubType,  Offset,   Size,    Flags
+nvs,       data, nvs,      0x9000,   0x5000,
+otadata,   data, ota,      0xE000,   0x2000,
+app0,      app,  ota_0,    0x10000,  0x500000,
+spiffs,    data, spiffs,   0x510000, 0xAF0000,

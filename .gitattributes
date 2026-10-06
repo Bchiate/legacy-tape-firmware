@@ -1,0 +1,14 @@
+# Generated LVGL assets: keep them out of GitHub's language statistics, and
+# keep the multi-megabyte image arrays out of text diffs.
+#   ui_img_*.c   image arrays (SquareLine Studio export, tools/gen_cassette.py)
+#   ui_font_*.c  bitmap fonts (lv_font_conv via SquareLine Studio)
+legacytape_arduino/ui_img_*.c    linguist-generated=true -diff
+legacytape_arduino/ui_font_*.c   linguist-generated=true
+
+# SquareLine Studio output that has not been edited by hand
+legacytape_arduino/ui_comp*.c    linguist-generated=true
+legacytape_arduino/ui_comp*.h    linguist-generated=true
+legacytape_arduino/ui_events.h   linguist-generated=true
+legacytape_arduino/ui_helpers.h  linguist-generated=true
+legacytape_arduino/ui_Screen1.*  linguist-generated=true
+legacytape_arduino/ui_Screen2.*  linguist-generated=true
