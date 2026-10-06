@@ -1,6 +1,6 @@
 # Legacy Tape — device firmware
 
-Legacy Tape is a cassette-recorder-style device that lets older adults record their life stories by pressing REC. I wrote this firmware for it. It runs on an ESP32-S3 touchscreen panel and does four things: it draws a tape-deck UI, records from the microphone, streams the audio to the cloud in 10-second chunks while the person is still talking, and plays finished chapters back through the speaker. Setup happens once from a companion phone app, which scans a QR code on the device and sends the WiFi credentials over Bluetooth LE.
+Legacy Tape is a cassette-recorder-style device that lets older adults record their life stories by pressing REC. I wrote this firmware for it. It runs on an ESP32-S3 touchscreen panel and does four things: it draws a tape-deck UI, records from the microphone, streams the audio to the cloud in 10-second chunks while the person is still talking, and plays finished chapters back through the speaker. Setup happens once from a [companion phone app](https://github.com/Bchiate/legacy-tape-app), which scans a QR code on the device and sends the WiFi credentials over Bluetooth LE.
 
 <!--
   MEDIA PLACEHOLDER: add 1-2 device photos or a short GIF here.
